@@ -4,8 +4,9 @@ import yaml from 'js-yaml';
 
 export type SourceRepo = { type: 'repo'; local_path: string; include?: string[]; exclude?: string[] };
 export type SourceUrl = { type: 'url'; pages_file: string }; // JSON array of { url, html }
+export type SourceFetchUrl = { type: 'fetch-url'; urls: string[]; origin?: string }; // Direct URL fetching
 export type Config = {
-  sources: (SourceRepo | SourceUrl)[];
+  sources: (SourceRepo | SourceUrl | SourceFetchUrl)[];
   mapping?: { root_dir?: string };
 };
 

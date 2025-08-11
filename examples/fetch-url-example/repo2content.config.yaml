@@ -1,0 +1,26 @@
+sources:
+  # Example 1: Fetch specific URLs
+  - type: fetch-url
+    urls:
+      - https://example.com
+      - https://example.com/about
+      - https://example.com/contact
+    origin: https://example.com
+
+  # Example 2: Fetch URLs from a different domain
+  - type: fetch-url
+    urls:
+      - https://github.com/features
+      - https://github.com/pricing
+    origin: https://github.com
+
+  # Example 3: Fetch from a JSON file (existing functionality)
+  # - type: url
+  #   pages_file: ../url-pages.json
+
+  # Example 4: Extract from local repository (existing functionality)
+  # - type: repo
+  #   local_path: ../some-source-repo
+
+mapping:
+  root_dir: content

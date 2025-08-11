@@ -1,6 +1,6 @@
 # repo2content — Minimal MVP
 
-Mirror content from a repo or URL list into a marketing repo as Markdown.
+Mirror content from a repo, URL list, or direct URL fetching into a marketing repo as Markdown.
 
 ## Quick start
 
@@ -25,9 +25,13 @@ repo2content pull
 # First, uncomment the url source in repo2content.config.yaml
 # Then run: repo2content pull
 
+# Or fetch URLs directly from the web
+# repo2content pull --fetch-urls "https://example.com,https://example.com/about"
+
 # You can also override config values with command line options:
 # repo2content pull --local-repo ../../some-source-repo
 # repo2content pull --urls ../url-pages.json
+# repo2content pull --fetch-urls "https://example.com,https://example.com/about"
 
 ### Available Commands
 
@@ -35,6 +39,7 @@ repo2content pull
 - `repo2content pull` - Read sources and write Markdown files
 - `repo2content pull --local-repo <path>` - Override local repo path
 - `repo2content pull --urls <file>` - Override URLs file
+- `repo2content pull --fetch-urls <urls>` - Fetch URLs directly from the web
 
 ### Testing Configuration
 
@@ -56,10 +61,12 @@ repo2content/
 │   ├── config.ts       # Configuration loading and types
 │   ├── extract-repo.ts # Extract content from local repositories
 │   ├── extract-url.ts  # Extract content from URLs
+│   ├── fetch-url.ts    # Fetch URLs directly from the web
 │   ├── map.ts          # Path mapping utilities
 │   └── util.ts         # General utilities (hashing, HTML conversion)
 ├── examples/
 │   ├── marketing-repo/ # Example marketing repository
+│   ├── fetch-url-example/ # Example URL fetching setup
 │   └── url-pages.json  # Example URL pages data
 └── package.json        # Dependencies and build scripts
 ```
@@ -74,8 +81,9 @@ import yaml from 'js-yaml';
 
 export type SourceRepo = { type: 'repo'; local_path: string; include?: string[]; exclude?: string[] };
 export type SourceUrl = { type: 'url'; pages_file: string }; // JSON array of { url, html }
+export type SourceFetchUrl = { type: 'fetch-url'; urls: string[]; origin?: string }; // Direct URL fetching
 export type Config = {
-  sources: (SourceRepo | SourceUrl)[];
+  sources: (SourceRepo | SourceUrl | SourceFetchUrl)[];
   mapping?: { root_dir?: string };
 };
 

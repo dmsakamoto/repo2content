@@ -1,0 +1,8 @@
+sources:
+  - type: fetch-url
+    urls:
+      - https://httpbin.org/html
+    origin: https://httpbin.org
+
+mapping:
+  root_dir: content

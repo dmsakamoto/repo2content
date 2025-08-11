@@ -5,6 +5,7 @@ import path from 'node:path';
 import { loadConfig, Config } from './config.js';
 import { extractFromRepo } from './extract-repo.js';
 import { extractFromUrls, UrlPage } from './extract-url.js';
+import { fetchUrls, extractFromFetchedUrls, FetchUrlPage } from './fetch-url.js';
 
 const program = new Command();
 program.name('repo2content').version('0.0.1').description('Mirror content into a marketing repo as Markdown');
@@ -14,7 +15,7 @@ program.command('init').description('Create example config and folders').action(
   await fs.ensureDir('_companion');
   const cfgPath = path.join(process.cwd(), 'repo2content.config.yaml');
   if (!(await fs.pathExists(cfgPath))) {
-    await fs.writeFile(cfgPath, `sources:\n  - type: repo\n    local_path: ../some-source-repo\n#  - type: url\n#    pages_file: ../url-pages.json\nmapping:\n  root_dir: content\n`);
+    await fs.writeFile(cfgPath, `sources:\n  - type: repo\n    local_path: ../some-source-repo\n#  - type: url\n#    pages_file: ../url-pages.json\n#  - type: fetch-url\n#    urls:\n#      - https://example.com/page1\n#      - https://example.com/page2\n#    origin: https://example.com\nmapping:\n  root_dir: content\n`);
   }
   console.log('Initialized. Edit repo2content.config.yaml and run `repo2content pull`.');
 });
@@ -23,8 +24,25 @@ program.command('pull')
   .description('Read sources and write Markdown files')
   .option('--local-repo <path>', 'Override local repo path from config')
   .option('--urls <file>', 'Override URLs file from config')
+  .option('--fetch-urls <urls>', 'Comma-separated list of URLs to fetch')
   .action(async (options) => {
-    const cfg = await loadConfig(process.cwd());
+    let cfg: Config;
+    try {
+      cfg = await loadConfig(process.cwd());
+    } catch (error) {
+      // If no config file exists but fetch-urls is provided, create a minimal config
+      if (options.fetchUrls) {
+        cfg = {
+          sources: [{
+            type: 'fetch-url',
+            urls: options.fetchUrls.split(',').map((u: string) => u.trim())
+          }],
+          mapping: { root_dir: 'content' }
+        };
+      } else {
+        throw error;
+      }
+    }
     const root = cfg.mapping?.root_dir || 'content';
 
     for (const s of cfg.sources) {
@@ -38,6 +56,14 @@ program.command('pull')
         const arr = JSON.parse(raw) as UrlPage[];
         const origin = arr[0]?.url ? new URL(arr[0].url).origin : 'https://example.com';
         const pages = await extractFromUrls(origin, arr, { root });
+        await writePages(pages);
+      } else if (s.type === 'fetch-url') {
+        const urls = options.fetchUrls ? options.fetchUrls.split(',').map((u: string) => u.trim()) : s.urls;
+        const origin = s.origin || (urls[0] ? new URL(urls[0]).origin : 'https://example.com');
+        
+        const fetchPages: FetchUrlPage[] = urls.map((url: string) => ({ url }));
+        const fetchedPages = await fetchUrls(fetchPages);
+        const pages = await extractFromFetchedUrls(origin, fetchedPages, { root });
         await writePages(pages);
       }
     }
