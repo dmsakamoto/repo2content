@@ -1,0 +1,22 @@
+{
+    "name": "repo2content",
+    "version": "0.0.1",
+    "type": "module",
+    "bin": {
+      "repo2content": "dist/cli.js"
+    },
+    "scripts": {
+      "build": "tsc -p .",
+      "start": "node dist/cli.js"
+    },
+    "dependencies": {
+      "commander": "^12.1.0",
+      "fs-extra": "^11.2.0",
+      "gray-matter": "^4.0.3",
+      "js-yaml": "^4.1.0"
+    },
+    "devDependencies": {
+      "typescript": "^5.5.4",
+      "@types/node": "^20.14.9"
+    }
+  }
