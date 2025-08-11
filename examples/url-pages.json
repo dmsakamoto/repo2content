@@ -1,0 +1,10 @@
+[
+  {
+    "url": "https://example.com/page1",
+    "html": "<html><body><h1>Example Page 1</h1><p>This is an example page.</p></body></html>"
+  },
+  {
+    "url": "https://example.com/page2", 
+    "html": "<html><body><h1>Example Page 2</h1><p>This is another example page.</p></body></html>"
+  }
+]

@@ -1,0 +1,9 @@
+sources:
+  - type: repo
+    local_path: ../some-source-repo
+    include: ["*.md", "*.mdx", "*.html"]
+    exclude: ["node_modules/**", ".git/**"]
+#  - type: url
+#    pages_file: ../url-pages.json
+mapping:
+  root_dir: content

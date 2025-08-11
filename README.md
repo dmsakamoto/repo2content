@@ -3,6 +3,11 @@
 Mirror content from a repo or URL list into a marketing repo as Markdown.
 
 ## Quick start
+
+### Prerequisites
+- Node.js 18+ and npm (install from [nodejs.org](https://nodejs.org/))
+
+### Setup
 ```bash
 npm i
 npm run build
@@ -11,14 +16,47 @@ npm run build
 cd examples/marketing-repo
 # 1) (optional) edit repo2content.config.yaml
 # 2) Pull from a local repo folder (MD/MDX/HTML)
-repo2content pull --local-repo ../../some-source-repo
+repo2content pull
 
 # Or pull from a list of URLs (JSON array of {url, html})
-repo2content pull --urls ../url-pages.json
+# First, uncomment the url source in repo2content.config.yaml
+# Then run: repo2content pull
+
+# You can also override config values with command line options:
+# repo2content pull --local-repo ../../some-source-repo
+# repo2content pull --urls ../url-pages.json
+
+### Testing Configuration
+
+To test your configuration without running the full extraction:
+
+```bash
+cd examples/marketing-repo
+node test-config.js
+```
 
 ---
 
-## src/config.ts
+## Project Structure
+
+```
+repo2content/
+├── src/
+│   ├── cli.ts          # Command-line interface
+│   ├── config.ts       # Configuration loading and types
+│   ├── extract-repo.ts # Extract content from local repositories
+│   ├── extract-url.ts  # Extract content from URLs
+│   ├── map.ts          # Path mapping utilities
+│   └── util.ts         # General utilities (hashing, HTML conversion)
+├── examples/
+│   ├── marketing-repo/ # Example marketing repository
+│   └── url-pages.json  # Example URL pages data
+└── package.json        # Dependencies and build scripts
+```
+
+## Configuration
+
+### src/config.ts
 ```ts
 import fs from 'fs-extra';
 import path from 'node:path';
