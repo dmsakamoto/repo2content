@@ -12,6 +12,9 @@ Mirror content from a repo or URL list into a marketing repo as Markdown.
 npm i
 npm run build
 
+# Optional: Install globally for easier access
+npm link
+
 # Try the example marketing repo
 cd examples/marketing-repo
 # 1) (optional) edit repo2content.config.yaml
@@ -25,6 +28,13 @@ repo2content pull
 # You can also override config values with command line options:
 # repo2content pull --local-repo ../../some-source-repo
 # repo2content pull --urls ../url-pages.json
+
+### Available Commands
+
+- `repo2content init` - Create example config and folders
+- `repo2content pull` - Read sources and write Markdown files
+- `repo2content pull --local-repo <path>` - Override local repo path
+- `repo2content pull --urls <file>` - Override URLs file
 
 ### Testing Configuration
 

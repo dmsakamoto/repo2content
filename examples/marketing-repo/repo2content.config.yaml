@@ -1,6 +1,6 @@
 sources:
   - type: repo
-    local_path: ../some-source-repo
+    local_path: ../../test-source-repo
     include: ["*.md", "*.mdx", "*.html"]
     exclude: ["node_modules/**", ".git/**"]
 #  - type: url
